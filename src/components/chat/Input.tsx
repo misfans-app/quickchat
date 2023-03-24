@@ -1,6 +1,5 @@
 import { component$, $, useSignal } from '@builder.io/qwik'
 import { HiArrowRightCircle } from '@qwikest/icons/heroicons'
-import styles from './input.module.scss'
 
 export default component$(() => {
   const hasText = useSignal<boolean>(false)
@@ -25,8 +24,8 @@ export default component$(() => {
         <HiArrowRightCircle class="w-8 h-8"/>
         {
           hasText.value && (
-            <div class={`absolute inset-0 rounded-full ${styles.animate_ping}`}>
-              <div>
+            <div class="absolute inset-0 grid place-items-center">
+              <div class={`w-8 h-8 bg-blue-400 rounded-full bg-opacity-50 mr-4 animate-ping`}>
               </div>
             </div>
           )
