@@ -1,19 +1,19 @@
 import { component$, $ } from '@builder.io/qwik'
-import { Form } from '@builder.io/qwik-city'
 import Input from '~/components/chat/Input'
 import ChatBox from '~/components/chat/ChatBox'
 
 
 export default component$(() => {
   const handleOnSubmit = $((e: any) => {
-    e.preventDefault()
+    const $form = e.target as HTMLFormElement
 
-    const { message } = Object.fromEntries(new FormData(e.currentTarget))
+    const { message } = Object.fromEntries(new FormData($form))
 
     if (!message) return
 
     console.log(message)
 
+    $form.reset()
   })
 
   return (
@@ -23,9 +23,12 @@ export default component$(() => {
           <ChatBox/>
         </div>
         
-        <Form preventdefault:submit onSubmit$={handleOnSubmit}>
+        <form
+          preventdefault:submit
+          onSubmit$={handleOnSubmit}
+        >
           <Input/>
-        </Form>
+        </form>
       </div>
     </div>
   )
