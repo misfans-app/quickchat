@@ -39,5 +39,9 @@
     "vite": "4.2.0",
     "vite-tsconfig-paths": "3.5.0",
     "wrangler": "latest"
+  },
+  "dependencies": {
+    "@qwikest/icons": "0.0.5",
+    "sass": "1.60.0"
   }
 }
