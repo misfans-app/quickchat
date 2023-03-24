@@ -18,6 +18,7 @@ export default component$(() => {
         placeholder="Type a message"
         name="message"
         onInput$={handleOnInput}
+        autoComplete="off"
       />
 
       <div class={`min-w-[2.5rem] max-w-[2.5rem] min-h-[2.5rem] max-h-[2.5rem] grid place-items-center pr-4 relative ${hasText.value ? 'text-blue-400' : ''}`}>
