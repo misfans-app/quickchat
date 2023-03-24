@@ -1,16 +1,16 @@
 interface IFirstArg {
-  message: string
+  messages: string[]
 }
 
 const message = async ({
-  message
+  messages
 }: IFirstArg) => {
   try {
     const fetching = await fetch(
       '/api/chat-gpt',
       {
         method: 'POST',
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ messages }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -19,8 +19,11 @@ const message = async ({
 
     const data = await fetching.json()
 
-    console.log(data)
+    if (typeof data.message === 'string') return { error: data.message }
 
+    return {
+      data: data.data as string
+    }
   } catch (e: any) {
     console.log(e)
     console.log('openai/message.ts error')

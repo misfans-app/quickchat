@@ -1,24 +1,37 @@
-import { component$, $ } from '@builder.io/qwik'
+import { component$, $, useSignal } from '@builder.io/qwik'
 import Input from '~/components/chat/Input'
 import ChatBox from '~/components/chat/ChatBox'
 import { FetchOpenAIMessage } from '~/services/openai'
 
 
 export default component$(() => {
+  const loading = useSignal<boolean>(false)
+
   const handleOnSubmit = $(async (e: any) => {
+    if (loading.value) return
+
     const $form = e.target as HTMLFormElement
 
     const { message } = Object.fromEntries(new FormData($form))
 
     if (!message) return
 
-    $form.reset()
+    loading.value = true
 
-    const a = await FetchOpenAIMessage({
-      message: message as string
+    const { error, data } = await FetchOpenAIMessage({
+      messages: [message as string]
     })
 
-    console.log(a)
+    loading.value = false
+
+    if (typeof error === 'string') {
+      console.log(error)
+      return
+    }
+
+    $form.reset()
+
+    console.log(data)
   })
 
   return (
@@ -32,7 +45,7 @@ export default component$(() => {
           preventdefault:submit
           onSubmit$={handleOnSubmit}
         >
-          <Input/>
+          <Input disabled={loading.value}/>
         </form>
       </div>
     </div>
