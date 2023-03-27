@@ -1,11 +1,16 @@
 import { component$, $, useSignal } from '@builder.io/qwik'
 import Input from '~/components/chat/Input'
-import ChatBox from '~/components/chat/ChatBox'
 import { FetchOpenAIMessage } from '~/services/openai'
+import Message from '~/components/Message'
 
+interface IMessage {
+  from: 'me' | 'him'
+  content: string
+}
 
 export default component$(() => {
   const loading = useSignal<boolean>(false)
+  const messages = useSignal<IMessage[]>([])
 
   const handleOnSubmit = $(async (e: any) => {
     if (loading.value) return
@@ -18,6 +23,13 @@ export default component$(() => {
 
     loading.value = true
 
+    $form.reset()
+
+    messages.value.push({
+      from: 'me',
+      content: message as string
+    })
+
     const { error, data } = await FetchOpenAIMessage({
       messages: [message as string]
     })
@@ -29,16 +41,33 @@ export default component$(() => {
       return
     }
 
-    $form.reset()
-
-    console.log(data)
+    messages.value.push({
+      from: 'him',
+      content: data as string
+    })
   })
 
   return (
     <div class="h-screen flex items-end pb-8">
       <div class="w-full flex flex-col gap-8">
-        <div class="max-h-[calc(100vh-8rem)] overflow-y-scroll">
-          <ChatBox/>
+        <div class="max-h-[calc(100vh-8rem)] overflow-y-auto flex flex-col gap-8 px-4">
+          {
+            messages.value.map((message, index) => (
+              <Message
+                key={index}
+                {...message}
+              />
+            ))
+          }
+
+          {
+            loading.value && (
+              <Message
+                from="him"
+                content="Typing..."
+              />
+            )
+          }
         </div>
         
         <form
