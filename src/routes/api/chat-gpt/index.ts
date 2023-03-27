@@ -5,7 +5,7 @@ const zodBody = z.object({
   messages: z.array(z.string().min(1))
 })
 
-const API_KEY = "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"
+const API_KEY = ""
 
 export const onPost: RequestHandler = async (ctx) => {
   const body = await ctx.parseBody()
